@@ -1,0 +1,26 @@
+# Test reports
+report/
+allure-report/
+allure-results/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE settings
+.idea/
+
+# Logs
+Log/
+*.log
+
+# Local secrets
+config/secret.env
+
+# Test and temporary files
+.pytest_cache/
+

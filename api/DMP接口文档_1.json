@@ -1,0 +1,3304 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "contact": {},
+        "version": "V2.0"
+    },
+    "servers": [
+        {
+            "url": "http://dev-uuam-gateway.ty.loc",
+            "description": "Generated server url"
+        }
+    ],
+    "tags": [
+        {
+            "name": "行业字典表管理",
+            "description": "industrydictionary"
+        },
+        {
+            "name": "产品信息管理",
+            "description": "productinfo"
+        },
+        {
+            "name": "用户信息管理",
+            "description": "userinfo"
+        },
+        {
+            "name": "机器设备对外接口",
+            "description": "feign"
+        },
+        {
+            "name": "机器管理",
+            "description": "/machine"
+        },
+        {
+            "name": "空间产品对外接口",
+            "description": "feign"
+        },
+        {
+            "name": "初始化",
+            "description": "/refresh"
+        },
+        {
+            "name": "空间管理管理",
+            "description": "spacemanage"
+        }
+    ],
+    "paths": {
+        "/userinfo/querySpaceUsers": {
+            "post": {
+                "tags": [
+                    "用户信息管理"
+                ],
+                "summary": "查询空间下的成员列表",
+                "description": "查询空间下的成员列表",
+                "operationId": "querySpaceUsers",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestPageModelUserInfoSpacePageRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RPageEntityUserInfoSpacePageVo"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/userinfo/querySpaceUsersBySystemId": {
+            "post": {
+                "tags": [
+                    "用户信息管理"
+                ],
+                "summary": "通过SystemId查询空间下的成员列表",
+                "description": "通过SystemId查询空间下的成员列表",
+                "operationId": "querySpaceUsersBySystemId",
+                "parameters": [
+                    {
+                        "name": "other-system-id",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestPageModelUserInfoSpacePageRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RPageEntityUserInfoSpacePageVo"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/userinfo/queryByPhone": {
+            "post": {
+                "tags": [
+                    "用户信息管理"
+                ],
+                "summary": "手机号或用户名或真实姓名 模糊查询用户 (已完成)",
+                "description": "手机号或用户名或真实姓名 模糊查询用户 (已完成)",
+                "operationId": "queryByPhoneOrUsername",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestPageModelQueryByPhoneEnter"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RPageEntityUserInfo"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/userinfo/queryByIds": {
+            "post": {
+                "tags": [
+                    "用户信息管理"
+                ],
+                "summary": "根据一批用户id集合查询用户集合 (已完成)",
+                "description": "根据一批用户id集合查询用户集合 (已完成)",
+                "operationId": "queryByPhoneOrUsername_1",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UuamSystemUserBo"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RListUserInfo"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/userinfo/getUserNameMap": {
+            "post": {
+                "tags": [
+                    "用户信息管理"
+                ],
+                "summary": "根据角色id查询对应的角色名称",
+                "description": "根据角色id查询对应的角色名称",
+                "operationId": "getUserNameMap",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UuamSystemUserBo"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RMapStringString"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/update": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "修改空间管理",
+                "description": "修改空间管理",
+                "operationId": "update",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SpaceUpdateDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RBoolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/statistics/type": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "项目类型统计",
+                "description": "项目类型统计",
+                "operationId": "statisticsType",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StatisticsTypeRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RStatisticsTypeResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/statistics/time": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "近12个月项目开展趋势",
+                "description": "近12个月项目开展趋势",
+                "operationId": "statisticsTime",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StatisticsTimeRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RListStatisticsTimeResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/statistics/industry": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "行业分布",
+                "description": "行业分布",
+                "operationId": "statisticsIndustry",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RListPairStringLong"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/statistics/active": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "最近项目",
+                "description": "最近项目",
+                "operationId": "statisticsActive",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RListSpacePageResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/selectIdsByUserId": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "通过用户编号获取空间ID列表",
+                "description": "通过用户编号获取空间ID列表",
+                "operationId": "selectIdsByUserId",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SpaceManagePageRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RListLong"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/restart/{spaceManageId}": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "重启",
+                "description": "重启",
+                "operationId": "restart",
+                "parameters": [
+                    {
+                        "name": "spaceManageId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RBoolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/page": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "分页查询",
+                "description": "分页查询",
+                "operationId": "page",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestPageModelSpacePageRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RPageEntitySpacePageResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/pageByUserId": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "通过用户编号分页查询",
+                "description": "通过用户编号分页查询",
+                "operationId": "pageByUserId",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestPageModelSpaceManagePageRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RPageEntitySpacePageResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/finish/{spaceManageId}": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "结项",
+                "description": "结项",
+                "operationId": "finish",
+                "parameters": [
+                    {
+                        "name": "spaceManageId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RBoolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/detail/{spaceManageId}": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "项目详情-项目总览 (已完成)",
+                "description": "项目详情-项目总览（项目总览）",
+                "operationId": "detail",
+                "parameters": [
+                    {
+                        "name": "spaceManageId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RSpaceDetailResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-author": "xhf"
+            }
+        },
+        "/spacemanage/delSpaceuser": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "删除空间成员",
+                "description": "删除空间成员",
+                "operationId": "delSpaceuser",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SpaceUserOptRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RBoolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/add": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "新增空间管理",
+                "description": "新增空间管理",
+                "operationId": "add",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SpaceAddDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RBoolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spacemanage/addSpaceUser": {
+            "post": {
+                "tags": [
+                    "空间管理管理"
+                ],
+                "summary": "添加空间成员",
+                "description": "添加空间成员",
+                "operationId": "addSpaceUser",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SpaceUserOptRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RBoolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/refresh/all": {
+            "post": {
+                "tags": [
+                    "初始化"
+                ],
+                "summary": "初始化空间、产品、用户",
+                "description": "初始化空间、产品、用户",
+                "operationId": "refreshSpace",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RBoolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/productinfo/update": {
+            "post": {
+                "tags": [
+                    "产品信息管理"
+                ],
+                "summary": "修改产品  (已完成)",
+                "description": "修改产品  (已完成)",
+                "operationId": "update_1",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductInfnUpdateDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RBoolean"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-author": "xhf"
+            }
+        },
+        "/productinfo/statisticsNum": {
+            "post": {
+                "tags": [
+                    "产品信息管理"
+                ],
+                "summary": "产品统计数量查询  (已完成)",
+                "description": "产品统计数量查询  (已完成)",
+                "operationId": "statisticsNum",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductStatisticsNumQuery"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RProductStatisticsNumVo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-author": "xhf"
+            }
+        },
+        "/productinfo/select": {
+            "post": {
+                "tags": [
+                    "产品信息管理"
+                ],
+                "summary": "产品下拉  (已完成)",
+                "description": "产品下拉  (已完成)",
+                "operationId": "select",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestPageModelProductSelectQuery"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RPageEntityProductSelectVo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-author": "xhf"
+            }
+        },
+        "/productinfo/page": {
+            "post": {
+                "tags": [
+                    "产品信息管理"
+                ],
+                "summary": "分页列表  (已完成)",
+                "description": "分页列表  (已完成)",
+                "operationId": "page_1",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestPageModelProductPageQuery"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RPageEntityProductPageVo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-author": "xhf"
+            }
+        },
+        "/productinfo/delete/{productInfoId}": {
+            "post": {
+                "tags": [
+                    "产品信息管理"
+                ],
+                "summary": "删除产品  (已完成)",
+                "description": "删除产品  (已完成)",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "name": "productInfoId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RBoolean"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-author": "xhf"
+            }
+        },
+        "/productinfo/add": {
+            "post": {
+                "tags": [
+                    "产品信息管理"
+                ],
+                "summary": "新增产品  (已完成)",
+                "description": "新增产品  (已完成)",
+                "operationId": "add_1",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductInfoAddDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RString"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-author": "xhf"
+            }
+        },
+        "/machine/schemeCount": {
+            "post": {
+                "tags": [
+                    "机器管理"
+                ],
+                "summary": "获取设备方案数 （已完成）",
+                "description": "获取设备方案数 （已完成）",
+                "operationId": "schemeCount",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MachineSchemeCountRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RMachineSchemeCountResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-author": "xhf"
+            }
+        },
+        "/machine/remove": {
+            "post": {
+                "tags": [
+                    "机器管理"
+                ],
+                "summary": "移除机器",
+                "description": "移除机器",
+                "operationId": "remove",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MachineUpdateRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RBoolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/machine/prepareDownload/{cloudDeviceNo}": {
+            "post": {
+                "tags": [
+                    "机器管理"
+                ],
+                "summary": "token文件下载预处理",
+                "description": "token文件下载预处理",
+                "operationId": "prepareDownload",
+                "parameters": [
+                    {
+                        "name": "cloudDeviceNo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RString"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/machine/page": {
+            "post": {
+                "tags": [
+                    "机器管理"
+                ],
+                "summary": "分页查询",
+                "description": "分页查询",
+                "operationId": "page_2",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestPageModelMachinePageRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RPageEntityMachinePageResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/machine/add": {
+            "post": {
+                "tags": [
+                    "机器管理"
+                ],
+                "summary": "添加机器",
+                "description": "添加机器",
+                "operationId": "add_2",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MachineUpdateRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RBoolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/industrydictionary/selectAll": {
+            "post": {
+                "tags": [
+                    "行业字典表管理"
+                ],
+                "operationId": "selectAll",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RListIndustryDictionary"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/feign/space/page": {
+            "post": {
+                "tags": [
+                    "空间产品对外接口"
+                ],
+                "summary": "空间分页",
+                "description": "空间分页",
+                "operationId": "spacePage",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestPageModelSpaceAllRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RPageEntitySpaceAllResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/feign/space/list": {
+            "post": {
+                "tags": [
+                    "空间产品对外接口"
+                ],
+                "summary": "空间查询",
+                "description": "空间查询",
+                "operationId": "spaceList",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SpaceAllRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RListSpaceAllResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/feign/product/list": {
+            "post": {
+                "tags": [
+                    "空间产品对外接口"
+                ],
+                "summary": "产品查询",
+                "description": "空间查询",
+                "operationId": "spaceList_1",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductFindAllQuery"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RListProductFindAllVo"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/feign/machine/{spaceId}": {
+            "post": {
+                "tags": [
+                    "机器设备对外接口"
+                ],
+                "summary": "查询所有机器",
+                "description": "查询所有机器",
+                "operationId": "allMachine",
+                "parameters": [
+                    {
+                        "name": "spaceId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RListMachinePageResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/feign/machine/encrypt/{cloudDeviceNo}": {
+            "post": {
+                "tags": [
+                    "机器设备对外接口"
+                ],
+                "summary": "查询机器设备加密相关信息",
+                "description": "查询机器设备加密相关信息",
+                "operationId": "getMachineEncrypt",
+                "parameters": [
+                    {
+                        "name": "cloudDeviceNo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RMachineEncrypt"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/machine/execute/{key}": {
+            "get": {
+                "tags": [
+                    "机器管理"
+                ],
+                "summary": "下载token文件",
+                "description": "下载token文件",
+                "operationId": "tokenDownload",
+                "parameters": [
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "PageForm": {
+                "required": [
+                    "pageIndex",
+                    "pageSize"
+                ],
+                "type": "object",
+                "properties": {
+                    "pageSize": {
+                        "type": "integer",
+                        "description": "每页显示数量",
+                        "format": "int64",
+                        "example": 10
+                    },
+                    "pageIndex": {
+                        "type": "integer",
+                        "description": "当前页数(页码)",
+                        "format": "int64",
+                        "example": 0
+                    }
+                },
+                "description": "接受页面分页的参数 form"
+            },
+            "RequestPageModelUserInfoSpacePageRequest": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/UserInfoSpacePageRequest"
+                    },
+                    "page": {
+                        "$ref": "#/components/schemas/PageForm"
+                    }
+                },
+                "description": "请求分页参数数据"
+            },
+            "UserInfoSpacePageRequest": {
+                "type": "object",
+                "properties": {
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    }
+                },
+                "description": "空间成员管理分页查询请求"
+            },
+            "OrderItem": {
+                "type": "object",
+                "properties": {
+                    "column": {
+                        "type": "string"
+                    },
+                    "asc": {
+                        "type": "boolean"
+                    }
+                },
+                "description": "排序字段信息"
+            },
+            "PageEntityUserInfoSpacePageVo": {
+                "type": "object",
+                "properties": {
+                    "orders": {
+                        "type": "array",
+                        "description": "排序字段信息",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int64",
+                        "deprecated": true
+                    },
+                    "list": {
+                        "type": "array",
+                        "description": "查询数据列表",
+                        "items": {
+                            "$ref": "#/components/schemas/UserInfoSpacePageVo"
+                        }
+                    },
+                    "total": {
+                        "type": "integer",
+                        "description": "总数",
+                        "format": "int64"
+                    },
+                    "pageIndex": {
+                        "type": "integer",
+                        "description": "当前页",
+                        "format": "int64"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "description": "每页显示条数，默认 10",
+                        "format": "int64"
+                    }
+                },
+                "description": "承载数据"
+            },
+            "RPageEntityUserInfoSpacePageVo": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageEntityUserInfoSpacePageVo"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "UserInfoSpacePageVo": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "integer",
+                        "description": "用户编号",
+                        "format": "int64"
+                    },
+                    "userName": {
+                        "type": "string",
+                        "description": "用户名"
+                    },
+                    "realName": {
+                        "type": "string",
+                        "description": "姓名"
+                    },
+                    "role": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "description": "角色",
+                            "items": {
+                                "$ref": "#/components/schemas/UuamRoleVo"
+                            }
+                        },
+                        "description": "角色"
+                    }
+                },
+                "description": "空间成员管理分页查询结果"
+            },
+            "UuamRoleVo": {
+                "type": "object",
+                "properties": {
+                    "roleName": {
+                        "type": "string",
+                        "description": "角色名称"
+                    },
+                    "roleId": {
+                        "type": "integer",
+                        "description": "角色id",
+                        "format": "int64"
+                    }
+                },
+                "description": "角色"
+            },
+            "QueryByPhoneEnter": {
+                "type": "object",
+                "properties": {
+                    "phone": {
+                        "type": "string",
+                        "description": "手机号或用户名或真实姓名"
+                    },
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "过滤掉指定空间的已添加用户，不传不过滤",
+                        "format": "int64"
+                    }
+                },
+                "description": "手机号或用户名模糊查询用户 参数"
+            },
+            "RequestPageModelQueryByPhoneEnter": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/QueryByPhoneEnter"
+                    },
+                    "page": {
+                        "$ref": "#/components/schemas/PageForm"
+                    }
+                },
+                "description": "请求分页参数数据"
+            },
+            "PageEntityUserInfo": {
+                "type": "object",
+                "properties": {
+                    "orders": {
+                        "type": "array",
+                        "description": "排序字段信息",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int64",
+                        "deprecated": true
+                    },
+                    "list": {
+                        "type": "array",
+                        "description": "查询数据列表",
+                        "items": {
+                            "$ref": "#/components/schemas/UserInfo"
+                        }
+                    },
+                    "total": {
+                        "type": "integer",
+                        "description": "总数",
+                        "format": "int64"
+                    },
+                    "pageIndex": {
+                        "type": "integer",
+                        "description": "当前页",
+                        "format": "int64"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "description": "每页显示条数，默认 10",
+                        "format": "int64"
+                    }
+                },
+                "description": "承载数据"
+            },
+            "RPageEntityUserInfo": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageEntityUserInfo"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "UserInfo": {
+                "required": [
+                    "phone",
+                    "userId"
+                ],
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "integer",
+                        "description": "用户编号",
+                        "format": "int64"
+                    },
+                    "userName": {
+                        "type": "string",
+                        "description": "用户名"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "description": "手机号"
+                    },
+                    "realName": {
+                        "type": "string",
+                        "description": "姓名"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "邮箱"
+                    }
+                },
+                "description": "用户信息"
+            },
+            "UuamSystemUserBo": {
+                "type": "object",
+                "properties": {
+                    "userIds": {
+                        "type": "array",
+                        "description": "用户ids",
+                        "items": {
+                            "type": "string",
+                            "description": "用户ids"
+                        }
+                    }
+                }
+            },
+            "RListUserInfo": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "承载数据",
+                        "items": {
+                            "$ref": "#/components/schemas/UserInfo"
+                        }
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "RMapStringString": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string",
+                            "description": "承载数据"
+                        },
+                        "description": "承载数据"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "SpaceUpdateDTO": {
+                "required": [
+                    "industryId",
+                    "spaceCnName",
+                    "spaceId",
+                    "spaceName",
+                    "spaceType"
+                ],
+                "type": "object",
+                "properties": {
+                    "spaceName": {
+                        "type": "string",
+                        "description": "空间标识"
+                    },
+                    "spaceCnName": {
+                        "type": "string",
+                        "description": "空间名称"
+                    },
+                    "spaceType": {
+                        "type": "integer",
+                        "description": "空间类型1质检3操作(EIIR)4打磨5焊接",
+                        "format": "int32"
+                    },
+                    "industryId": {
+                        "type": "integer",
+                        "description": "行业编号",
+                        "format": "int64"
+                    },
+                    "spaceExplain": {
+                        "type": "string",
+                        "description": "空间说明"
+                    },
+                    "spaceId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    }
+                }
+            },
+            "RBoolean": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "type": "boolean",
+                        "description": "承载数据"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "StatisticsTypeRequest": {
+                "type": "object",
+                "properties": {
+                    "spaceStatus": {
+                        "type": "integer",
+                        "description": "空间状态1进行中2已结项null全部",
+                        "format": "int32"
+                    }
+                }
+            },
+            "RStatisticsTypeResponse": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/StatisticsTypeResponse"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "StatisticsTypeResponse": {
+                "type": "object",
+                "properties": {
+                    "inspection": {
+                        "type": "integer",
+                        "description": "质检数量",
+                        "format": "int32"
+                    },
+                    "operation": {
+                        "type": "integer",
+                        "description": "操作数量",
+                        "format": "int32"
+                    },
+                    "polish": {
+                        "type": "integer",
+                        "description": "打磨",
+                        "format": "int32"
+                    },
+                    "welding": {
+                        "type": "integer",
+                        "description": "焊接",
+                        "format": "int32"
+                    }
+                },
+                "description": "承载数据"
+            },
+            "StatisticsTimeRequest": {
+                "type": "object",
+                "properties": {
+                    "spaceType": {
+                        "type": "integer",
+                        "description": "空间类型1质检3操作(EIIR)4打磨5焊接",
+                        "format": "int32"
+                    }
+                }
+            },
+            "RListStatisticsTimeResponse": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "承载数据",
+                        "items": {
+                            "$ref": "#/components/schemas/StatisticsTimeResponse"
+                        }
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "StatisticsTimeResponse": {
+                "type": "object",
+                "properties": {
+                    "month": {
+                        "type": "string",
+                        "description": "月份"
+                    },
+                    "startCount": {
+                        "type": "integer",
+                        "description": "开始数量",
+                        "format": "int64"
+                    },
+                    "finishedCount": {
+                        "type": "integer",
+                        "description": "结项数量",
+                        "format": "int64"
+                    }
+                },
+                "description": "承载数据"
+            },
+            "PairStringLong": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "description": "承载数据"
+            },
+            "RListPairStringLong": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "承载数据",
+                        "items": {
+                            "$ref": "#/components/schemas/PairStringLong"
+                        }
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "RListSpacePageResponse": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "承载数据",
+                        "items": {
+                            "$ref": "#/components/schemas/SpacePageResponse"
+                        }
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "SpacePageResponse": {
+                "type": "object",
+                "properties": {
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "spaceName": {
+                        "type": "string",
+                        "description": "空间名称"
+                    },
+                    "spaceCnName": {
+                        "type": "string",
+                        "description": "空间中文名称"
+                    },
+                    "spaceStatus": {
+                        "type": "integer",
+                        "description": "空间状态1进行中2已结项",
+                        "format": "int32"
+                    },
+                    "productNum": {
+                        "type": "integer",
+                        "description": "产品数量",
+                        "format": "int32"
+                    },
+                    "memberNum": {
+                        "type": "integer",
+                        "description": "成员数量",
+                        "format": "int32"
+                    },
+                    "deviceNum": {
+                        "type": "integer",
+                        "description": "机台数量",
+                        "format": "int32"
+                    },
+                    "industryId": {
+                        "type": "string",
+                        "description": "行业编号"
+                    },
+                    "industryName": {
+                        "type": "string",
+                        "description": "行业名称"
+                    },
+                    "spaceType": {
+                        "type": "integer",
+                        "description": "空间类型1质检3操作(EIIR)4打磨5焊接",
+                        "format": "int32"
+                    },
+                    "spaceExplain": {
+                        "type": "string",
+                        "description": "空间说明"
+                    },
+                    "finishedTime": {
+                        "type": "string",
+                        "description": "结项时间",
+                        "format": "date-time"
+                    }
+                },
+                "description": "承载数据"
+            },
+            "SpaceManagePageRequest": {
+                "type": "object",
+                "properties": {
+                    "spaceName": {
+                        "type": "string",
+                        "description": "项目空间名称"
+                    },
+                    "spaceType": {
+                        "type": "integer",
+                        "description": "空间类型0全部1质检2EW3EIIR",
+                        "format": "int32"
+                    },
+                    "showUnsettle": {
+                        "type": "boolean",
+                        "description": "显示未结项的项目：true只显示未结项，false显示全部状态(默认)"
+                    },
+                    "showSelf": {
+                        "type": "boolean",
+                        "description": "只展示自身拥有的空间"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "description": "用户编号",
+                        "format": "int64"
+                    }
+                },
+                "description": "空间管理分页查询请求"
+            },
+            "RListLong": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "承载数据",
+                        "items": {
+                            "type": "integer",
+                            "description": "承载数据",
+                            "format": "int64"
+                        }
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "RequestPageModelSpacePageRequest": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/SpacePageRequest"
+                    },
+                    "page": {
+                        "$ref": "#/components/schemas/PageForm"
+                    }
+                },
+                "description": "请求分页参数数据"
+            },
+            "SpacePageRequest": {
+                "type": "object",
+                "properties": {
+                    "spaceName": {
+                        "type": "string",
+                        "description": "空间名称"
+                    },
+                    "spaceType": {
+                        "type": "integer",
+                        "description": "空间类型1质检3操作(EIIR)4打磨5焊接",
+                        "format": "int32"
+                    },
+                    "spaceStatus": {
+                        "type": "integer",
+                        "description": "空间状态1进行中2已结项",
+                        "format": "int32"
+                    }
+                },
+                "description": "具体请求参数"
+            },
+            "PageEntitySpacePageResponse": {
+                "type": "object",
+                "properties": {
+                    "orders": {
+                        "type": "array",
+                        "description": "排序字段信息",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int64",
+                        "deprecated": true
+                    },
+                    "list": {
+                        "type": "array",
+                        "description": "查询数据列表",
+                        "items": {
+                            "$ref": "#/components/schemas/SpacePageResponse"
+                        }
+                    },
+                    "total": {
+                        "type": "integer",
+                        "description": "总数",
+                        "format": "int64"
+                    },
+                    "pageIndex": {
+                        "type": "integer",
+                        "description": "当前页",
+                        "format": "int64"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "description": "每页显示条数，默认 10",
+                        "format": "int64"
+                    }
+                },
+                "description": "承载数据"
+            },
+            "RPageEntitySpacePageResponse": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageEntitySpacePageResponse"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "RequestPageModelSpaceManagePageRequest": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/SpaceManagePageRequest"
+                    },
+                    "page": {
+                        "$ref": "#/components/schemas/PageForm"
+                    }
+                },
+                "description": "请求分页参数数据"
+            },
+            "RSpaceDetailResponse": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/SpaceDetailResponse"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "SpaceDetailResponse": {
+                "type": "object",
+                "properties": {
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "spaceName": {
+                        "type": "string",
+                        "description": "空间标识"
+                    },
+                    "spaceCnName": {
+                        "type": "string",
+                        "description": "空间名称"
+                    },
+                    "spaceType": {
+                        "type": "integer",
+                        "description": "空间类型1质检3操作(EIIR)4打磨5焊接",
+                        "format": "int32"
+                    },
+                    "spaceStatus": {
+                        "type": "integer",
+                        "description": "空间状态1进行中2已结项",
+                        "format": "int32"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "description": "创建时间",
+                        "format": "date-time"
+                    },
+                    "productNum": {
+                        "type": "integer",
+                        "description": "产品数量",
+                        "format": "int32"
+                    },
+                    "memberNum": {
+                        "type": "integer",
+                        "description": "成员数量",
+                        "format": "int32"
+                    },
+                    "deviceNum": {
+                        "type": "integer",
+                        "description": "机台数量",
+                        "format": "int32"
+                    },
+                    "algorithmSupervisorList": {
+                        "type": "array",
+                        "description": "算法主管用户列表",
+                        "items": {
+                            "$ref": "#/components/schemas/UserInfo"
+                        }
+                    },
+                    "deliverySupervisorList": {
+                        "type": "array",
+                        "description": "交付组长用户列表",
+                        "items": {
+                            "$ref": "#/components/schemas/UserInfo"
+                        }
+                    }
+                },
+                "description": "承载数据"
+            },
+            "SpaceUserOptRequest": {
+                "type": "object",
+                "properties": {
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "description": "用户编号",
+                        "format": "int64"
+                    },
+                    "userIds": {
+                        "type": "array",
+                        "description": "用户编号列表(仅添加空间使用)",
+                        "items": {
+                            "type": "integer",
+                            "description": "用户编号列表(仅添加空间使用)",
+                            "format": "int64"
+                        }
+                    }
+                },
+                "description": "操作空间成员请求参数"
+            },
+            "SpaceAddDTO": {
+                "required": [
+                    "industryId",
+                    "spaceCnName",
+                    "spaceName",
+                    "spaceType"
+                ],
+                "type": "object",
+                "properties": {
+                    "spaceName": {
+                        "type": "string",
+                        "description": "空间标识"
+                    },
+                    "spaceCnName": {
+                        "type": "string",
+                        "description": "空间名称"
+                    },
+                    "spaceType": {
+                        "type": "integer",
+                        "description": "空间类型1质检3操作(EIIR)4打磨5焊接",
+                        "format": "int32"
+                    },
+                    "industryId": {
+                        "type": "integer",
+                        "description": "行业编号",
+                        "format": "int64"
+                    },
+                    "spaceExplain": {
+                        "type": "string",
+                        "description": "空间说明"
+                    }
+                }
+            },
+            "ProductInfnUpdateDto": {
+                "required": [
+                    "productInfoId",
+                    "showName",
+                    "spaceManageId"
+                ],
+                "type": "object",
+                "properties": {
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "productInfoId": {
+                        "type": "integer",
+                        "description": "产品id",
+                        "format": "int64"
+                    },
+                    "showName": {
+                        "type": "string",
+                        "description": "产品名称"
+                    }
+                },
+                "description": "产品信息更新请求"
+            },
+            "ProductStatisticsNumQuery": {
+                "required": [
+                    "spaceManageId"
+                ],
+                "type": "object",
+                "properties": {
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "productInfoId": {
+                        "type": "integer",
+                        "description": "产品id",
+                        "format": "int64"
+                    }
+                },
+                "description": "产品统计数量 请求 实体类"
+            },
+            "ProductStatisticsNumVo": {
+                "type": "object",
+                "properties": {
+                    "sampleStandardNum": {
+                        "type": "integer",
+                        "description": "原始标准样本总量",
+                        "format": "int32"
+                    },
+                    "sampleBashNum": {
+                        "type": "integer",
+                        "description": "原始bash样本总量",
+                        "format": "int32"
+                    },
+                    "datasetStandardNum": {
+                        "type": "integer",
+                        "description": "标准数据集样本总量",
+                        "format": "int32"
+                    },
+                    "datasetBashNum": {
+                        "type": "integer",
+                        "description": "bash数据集样本总量",
+                        "format": "int32"
+                    },
+                    "modelVersionNum": {
+                        "type": "integer",
+                        "description": "模型版本数量",
+                        "format": "int32"
+                    }
+                },
+                "description": "产品统计数量 返回 实体类"
+            },
+            "RProductStatisticsNumVo": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ProductStatisticsNumVo"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "ProductSelectQuery": {
+                "required": [
+                    "spaceManageId"
+                ],
+                "type": "object",
+                "properties": {
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "ignoreProductInfoIdList": {
+                        "type": "array",
+                        "description": "忽略产品Id",
+                        "items": {
+                            "type": "integer",
+                            "description": "忽略产品Id",
+                            "format": "int64"
+                        }
+                    }
+                },
+                "description": "产品下拉 请求 实体类"
+            },
+            "RequestPageModelProductSelectQuery": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ProductSelectQuery"
+                    },
+                    "page": {
+                        "$ref": "#/components/schemas/PageForm"
+                    }
+                },
+                "description": "请求分页参数数据"
+            },
+            "PageEntityProductSelectVo": {
+                "type": "object",
+                "properties": {
+                    "orders": {
+                        "type": "array",
+                        "description": "排序字段信息",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int64",
+                        "deprecated": true
+                    },
+                    "list": {
+                        "type": "array",
+                        "description": "查询数据列表",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductSelectVo"
+                        }
+                    },
+                    "total": {
+                        "type": "integer",
+                        "description": "总数",
+                        "format": "int64"
+                    },
+                    "pageIndex": {
+                        "type": "integer",
+                        "description": "当前页",
+                        "format": "int64"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "description": "每页显示条数，默认 10",
+                        "format": "int64"
+                    }
+                },
+                "description": "承载数据"
+            },
+            "ProductSelectVo": {
+                "type": "object",
+                "properties": {
+                    "productInfoId": {
+                        "type": "integer",
+                        "description": "产品编号",
+                        "format": "int64"
+                    },
+                    "productCode": {
+                        "type": "string",
+                        "description": "产品标识"
+                    },
+                    "showName": {
+                        "type": "string",
+                        "description": "展示名称"
+                    }
+                },
+                "description": "产品下拉 返回 实体类"
+            },
+            "RPageEntityProductSelectVo": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageEntityProductSelectVo"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "ProductPageQuery": {
+                "required": [
+                    "spaceManageId"
+                ],
+                "type": "object",
+                "properties": {
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "source": {
+                        "type": "integer",
+                        "description": "来源0云1本地",
+                        "format": "int32"
+                    },
+                    "queryText": {
+                        "type": "string",
+                        "description": "查询文本"
+                    }
+                },
+                "description": "产品信息分页 请求 实体类"
+            },
+            "RequestPageModelProductPageQuery": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ProductPageQuery"
+                    },
+                    "page": {
+                        "$ref": "#/components/schemas/PageForm"
+                    }
+                },
+                "description": "请求分页参数数据"
+            },
+            "PageEntityProductPageVo": {
+                "type": "object",
+                "properties": {
+                    "orders": {
+                        "type": "array",
+                        "description": "排序字段信息",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int64",
+                        "deprecated": true
+                    },
+                    "list": {
+                        "type": "array",
+                        "description": "查询数据列表",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductPageVo"
+                        }
+                    },
+                    "total": {
+                        "type": "integer",
+                        "description": "总数",
+                        "format": "int64"
+                    },
+                    "pageIndex": {
+                        "type": "integer",
+                        "description": "当前页",
+                        "format": "int64"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "description": "每页显示条数，默认 10",
+                        "format": "int64"
+                    }
+                },
+                "description": "承载数据"
+            },
+            "ProductPageVo": {
+                "type": "object",
+                "properties": {
+                    "sampleStandardNum": {
+                        "type": "integer",
+                        "description": "原始标准样本总量",
+                        "format": "int32"
+                    },
+                    "sampleBashNum": {
+                        "type": "integer",
+                        "description": "原始bash样本总量",
+                        "format": "int32"
+                    },
+                    "datasetStandardNum": {
+                        "type": "integer",
+                        "description": "标准数据集样本总量",
+                        "format": "int32"
+                    },
+                    "datasetBashNum": {
+                        "type": "integer",
+                        "description": "bash数据集样本总量",
+                        "format": "int32"
+                    },
+                    "modelVersionNum": {
+                        "type": "integer",
+                        "description": "模型版本数量",
+                        "format": "int32"
+                    },
+                    "productInfoId": {
+                        "type": "integer",
+                        "description": "产品编号",
+                        "format": "int64"
+                    },
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "productCode": {
+                        "type": "string",
+                        "description": "产品标识"
+                    },
+                    "showName": {
+                        "type": "string",
+                        "description": "展示名称"
+                    },
+                    "source": {
+                        "type": "integer",
+                        "description": "来源0云1本地",
+                        "format": "int32"
+                    }
+                },
+                "description": "产品信息分页 返回 实体类"
+            },
+            "RPageEntityProductPageVo": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageEntityProductPageVo"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "ProductInfoAddDto": {
+                "required": [
+                    "productCode",
+                    "showName",
+                    "spaceManageId"
+                ],
+                "type": "object",
+                "properties": {
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "productCode": {
+                        "type": "string",
+                        "description": "产品标识"
+                    },
+                    "showName": {
+                        "type": "string",
+                        "description": "产品名称"
+                    },
+                    "referenceProductCode": {
+                        "type": "string",
+                        "description": "引用的其他产品code"
+                    },
+                    "copyLabel": {
+                        "type": "boolean",
+                        "description": "是否复制产品标签"
+                    }
+                },
+                "description": "产品信息新增请求"
+            },
+            "RString": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "type": "string",
+                        "description": "承载数据"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "MachineSchemeCountRequest": {
+                "required": [
+                    "spaceId"
+                ],
+                "type": "object",
+                "properties": {
+                    "spaceId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "machineId": {
+                        "type": "string",
+                        "description": "设备id"
+                    }
+                },
+                "description": "设备方案数量 请求 实体类"
+            },
+            "MachineSchemeCountResponse": {
+                "type": "object",
+                "properties": {
+                    "finishedElectromechanicalCount": {
+                        "type": "integer",
+                        "description": "完成的机电方案数量",
+                        "format": "int32"
+                    },
+                    "finishedOpticalCount": {
+                        "type": "integer",
+                        "description": "完成的光学方案数量",
+                        "format": "int32"
+                    }
+                },
+                "description": "设备方案数量 返回 实体类"
+            },
+            "RMachineSchemeCountResponse": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/MachineSchemeCountResponse"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "MachineUpdateRequest": {
+                "type": "object",
+                "properties": {
+                    "machineId": {
+                        "type": "integer",
+                        "description": "机器Id",
+                        "format": "int64"
+                    },
+                    "spaceId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    }
+                },
+                "description": "机器添加移除请求实体"
+            },
+            "MachinePageRequest": {
+                "type": "object",
+                "properties": {
+                    "spaceId": {
+                        "type": "integer",
+                        "description": "项目 id",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "名称"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "description": "状态0未绑定1已绑定",
+                        "format": "int64"
+                    },
+                    "system": {
+                        "type": "string",
+                        "description": "系统"
+                    }
+                },
+                "description": "机器分页查询请求"
+            },
+            "RequestPageModelMachinePageRequest": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/MachinePageRequest"
+                    },
+                    "page": {
+                        "$ref": "#/components/schemas/PageForm"
+                    }
+                },
+                "description": "请求分页参数数据"
+            },
+            "MachinePageResponse": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "机器名称"
+                    },
+                    "spaceId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "sn": {
+                        "type": "string",
+                        "description": "机器SN"
+                    },
+                    "machineId": {
+                        "type": "integer",
+                        "description": "机器Id",
+                        "format": "int64"
+                    },
+                    "machineNo": {
+                        "type": "string",
+                        "description": "本地设备号"
+                    },
+                    "machineType": {
+                        "type": "string",
+                        "description": "机器型号"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "description": "创建时间"
+                    }
+                },
+                "description": "机器分页查询响应实体"
+            },
+            "PageEntityMachinePageResponse": {
+                "type": "object",
+                "properties": {
+                    "orders": {
+                        "type": "array",
+                        "description": "排序字段信息",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int64",
+                        "deprecated": true
+                    },
+                    "list": {
+                        "type": "array",
+                        "description": "查询数据列表",
+                        "items": {
+                            "$ref": "#/components/schemas/MachinePageResponse"
+                        }
+                    },
+                    "total": {
+                        "type": "integer",
+                        "description": "总数",
+                        "format": "int64"
+                    },
+                    "pageIndex": {
+                        "type": "integer",
+                        "description": "当前页",
+                        "format": "int64"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "description": "每页显示条数，默认 10",
+                        "format": "int64"
+                    }
+                },
+                "description": "承载数据"
+            },
+            "RPageEntityMachinePageResponse": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageEntityMachinePageResponse"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "IndustryDictionary": {
+                "type": "object",
+                "properties": {
+                    "industryId": {
+                        "type": "integer",
+                        "description": "行业编号，主键",
+                        "format": "int64"
+                    },
+                    "industryName": {
+                        "type": "string",
+                        "description": "行业名称"
+                    },
+                    "industryCode": {
+                        "type": "string",
+                        "description": "行业代码（预留字段）"
+                    },
+                    "industryPid": {
+                        "type": "integer",
+                        "description": "行业父id（预留字段）",
+                        "format": "int64"
+                    },
+                    "version": {
+                        "type": "integer",
+                        "description": "版本号",
+                        "format": "int32"
+                    }
+                },
+                "description": "行业字典表"
+            },
+            "RListIndustryDictionary": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "承载数据",
+                        "items": {
+                            "$ref": "#/components/schemas/IndustryDictionary"
+                        }
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "RequestPageModelSpaceAllRequest": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/SpaceAllRequest"
+                    },
+                    "page": {
+                        "$ref": "#/components/schemas/PageForm"
+                    }
+                },
+                "description": "请求分页参数数据"
+            },
+            "SpaceAllRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "空间名称"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "description": "用户id 如不需要权限传null",
+                        "format": "int64"
+                    },
+                    "spaceStatus": {
+                        "type": "integer",
+                        "description": "空间状态1进行中2已结项",
+                        "format": "int32"
+                    },
+                    "spaceType": {
+                        "type": "integer",
+                        "description": "空间类型1质检2操作(EW)3打磨4焊接",
+                        "format": "int32"
+                    },
+                    "spaceIds": {
+                        "type": "array",
+                        "description": "空间编号集合",
+                        "items": {
+                            "type": "integer",
+                            "description": "空间编号集合",
+                            "format": "int64"
+                        }
+                    }
+                },
+                "description": "具体请求参数"
+            },
+            "PageEntitySpaceAllResponse": {
+                "type": "object",
+                "properties": {
+                    "orders": {
+                        "type": "array",
+                        "description": "排序字段信息",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int64",
+                        "deprecated": true
+                    },
+                    "list": {
+                        "type": "array",
+                        "description": "查询数据列表",
+                        "items": {
+                            "$ref": "#/components/schemas/SpaceAllResponse"
+                        }
+                    },
+                    "total": {
+                        "type": "integer",
+                        "description": "总数",
+                        "format": "int64"
+                    },
+                    "pageIndex": {
+                        "type": "integer",
+                        "description": "当前页",
+                        "format": "int64"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "description": "每页显示条数，默认 10",
+                        "format": "int64"
+                    }
+                },
+                "description": "承载数据"
+            },
+            "RPageEntitySpaceAllResponse": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageEntitySpaceAllResponse"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "SpaceAllResponse": {
+                "type": "object",
+                "properties": {
+                    "spaceId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "spaceName": {
+                        "type": "string",
+                        "description": "空间名称"
+                    },
+                    "spaceCnName": {
+                        "type": "string",
+                        "description": "空间中文名称"
+                    },
+                    "spaceStatus": {
+                        "type": "integer",
+                        "description": "空间状态1进行中2已结项",
+                        "format": "int32"
+                    },
+                    "industryName": {
+                        "type": "string",
+                        "description": "行业名称"
+                    },
+                    "spaceType": {
+                        "type": "integer",
+                        "description": "空间类型1质检3操作(EIIR)4打磨5焊接",
+                        "format": "int32"
+                    },
+                    "spaceExplain": {
+                        "type": "string",
+                        "description": "空间说明"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "description": "创建时间",
+                        "format": "date-time"
+                    },
+                    "finishedTime": {
+                        "type": "string",
+                        "description": "结项时间",
+                        "format": "date-time"
+                    },
+                    "deviceNum": {
+                        "type": "integer",
+                        "description": "机器数量",
+                        "format": "int32"
+                    }
+                },
+                "description": "查询数据列表"
+            },
+            "RListSpaceAllResponse": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "承载数据",
+                        "items": {
+                            "$ref": "#/components/schemas/SpaceAllResponse"
+                        }
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "ProductFindAllQuery": {
+                "type": "object",
+                "properties": {
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    }
+                },
+                "description": "所有产品 请求 实体类"
+            },
+            "ProductFindAllVo": {
+                "type": "object",
+                "properties": {
+                    "spaceManageId": {
+                        "type": "integer",
+                        "description": "空间编号",
+                        "format": "int64"
+                    },
+                    "productInfoId": {
+                        "type": "integer",
+                        "description": "产品编号",
+                        "format": "int64"
+                    },
+                    "productCode": {
+                        "type": "string",
+                        "description": "产品标识"
+                    },
+                    "showName": {
+                        "type": "string",
+                        "description": "展示名称"
+                    },
+                    "source": {
+                        "type": "integer",
+                        "description": "来源0云1本地",
+                        "format": "int32"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "description": "创建时间",
+                        "format": "date-time"
+                    }
+                },
+                "description": "所有产品 返回 实体类"
+            },
+            "RListProductFindAllVo": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "承载数据",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductFindAllVo"
+                        }
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "RListMachinePageResponse": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "承载数据",
+                        "items": {
+                            "$ref": "#/components/schemas/MachinePageResponse"
+                        }
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            },
+            "MachineEncrypt": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "token"
+                    },
+                    "mqtt": {
+                        "type": "string",
+                        "description": "mqtt"
+                    }
+                },
+                "description": "设备加密信息"
+            },
+            "RMachineEncrypt": {
+                "required": [
+                    "code",
+                    "msg",
+                    "success"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "状态码",
+                        "format": "int32"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "description": "是否成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/MachineEncrypt"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "返回消息"
+                    }
+                }
+            }
+        }
+    },
+    "x-openapi": {
+        "x-setting": null,
+        "x-markdownFiles": []
+    }
+}
+
+
+
