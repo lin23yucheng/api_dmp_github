@@ -1,6 +1,6 @@
 """
-对比两份 OpenAPI JSON 文档，输出差异 Markdown 报告，
-并在有差异时生成带 _1 后缀的测试脚本副本。
+对比两份 OpenAPI JSON 文档，生成差异 Markdown 报告；
+当检测到变更时，同时产出 `api_new` 接口封装与带 `_1` 后缀的测试脚本副本。
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ LLM_SUGGESTION_END = "# === LLM 新增接口建议 END ==="
 
 @dataclass
 class EndpointSpec:
-    key: str  # 请求方法 + 路径
+    key: str  # 接口唯一键：METHOD + PATH
     method: str
     path: str
     operation_id: str
@@ -45,17 +45,20 @@ class EndpointSpec:
 
 
 def _load_json(path: Path) -> Dict[str, Any]:
+    """读取 UTF-8 JSON 文件并返回字典对象。"""
     with path.open("r", encoding="utf-8") as f:
         return json.load(f)
 
 
 def _ref_name(ref: str) -> str:
+    """从 OpenAPI $ref 中提取末尾 schema 名称。"""
     if not ref:
         return ""
     return ref.split("/")[-1]
 
 
 def _schema_type_name(schema: Dict[str, Any]) -> str:
+    """将 schema 转成可读类型名，兼容 $ref 与 array[item] 表达。"""
     if "$ref" in schema:
         return _ref_name(schema["$ref"])
     schema_type = schema.get("type", "object")
@@ -71,6 +74,7 @@ def _schema_type_name(schema: Dict[str, Any]) -> str:
 
 
 def _resolve_ref_schema(schema: Dict[str, Any], components: Dict[str, Any]) -> Dict[str, Any]:
+    """若 schema 为 $ref，返回 components 中解析后的真实 schema。"""
     if "$ref" not in schema:
         return schema
     ref = schema["$ref"]
@@ -86,13 +90,14 @@ def _collect_object_fields(
     depth: int = 0,
     seen: Optional[Set[str]] = None,
 ) -> List[str]:
+    """递归提取对象字段清单，输出 `path:type`，必填字段附带 `*` 标记。"""
     if seen is None:
         seen = set()
 
     if depth > 6:
         return []
 
-    # 优先解析 $ref 引用。
+    # 优先展开 $ref，确保后续字段提取基于真实 schema。
     if "$ref" in schema:
         ref = schema["$ref"]
         if ref in seen:
@@ -151,6 +156,7 @@ def _collect_object_fields(
 
 
 def _extract_parameters(operation: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """提取并标准化 operation 的 parameters 列表。"""
     result: List[Dict[str, Any]] = []
     for p in operation.get("parameters", []) or []:
         schema = p.get("schema", {}) or {}
@@ -167,6 +173,7 @@ def _extract_parameters(operation: Dict[str, Any]) -> List[Dict[str, Any]]:
 
 
 def _extract_request_schema(operation: Dict[str, Any]) -> Tuple[str, List[str]]:
+    """提取 application/json 的请求体 schema 引用（当前仅返回 schema_ref）。"""
     request_body = operation.get("requestBody", {}) or {}
     content = request_body.get("content", {}) or {}
     app_json = content.get("application/json", {}) or {}
@@ -176,6 +183,7 @@ def _extract_request_schema(operation: Dict[str, Any]) -> Tuple[str, List[str]]:
 
 
 def _extract_endpoint_specs(openapi_doc: Dict[str, Any]) -> Dict[str, EndpointSpec]:
+    """将 OpenAPI paths 展平为 endpoint spec 映射，key 为 `METHOD PATH`。"""
     paths = openapi_doc.get("paths", {}) or {}
     components = ((openapi_doc.get("components", {}) or {}).get("schemas", {}) or {})
 
@@ -212,6 +220,7 @@ def _extract_endpoint_specs(openapi_doc: Dict[str, Any]) -> Dict[str, EndpointSp
 
 
 def _compare_specs(old_specs: Dict[str, EndpointSpec], new_specs: Dict[str, EndpointSpec]) -> Dict[str, Any]:
+    """比较新旧 endpoint spec，返回新增/删除/变更/地址迁移结果。"""
     old_keys = set(old_specs.keys())
     new_keys = set(new_specs.keys())
 
@@ -245,7 +254,7 @@ def _compare_specs(old_specs: Dict[str, EndpointSpec], new_specs: Dict[str, Endp
                 }
             )
 
-    # 接口地址变更判定：同一 operationId 在两份文档中的 METHOD+PATH 不一致。
+    # 地址迁移判定：同一 operationId 在新旧文档中的 METHOD+PATH 集合不同。
     old_op_map: Dict[str, Set[str]] = {}
     new_op_map: Dict[str, Set[str]] = {}
     for key, spec in old_specs.items():
@@ -277,6 +286,7 @@ def _compare_specs(old_specs: Dict[str, EndpointSpec], new_specs: Dict[str, Endp
 
 
 def _fmt_param_list(params: List[Dict[str, Any]]) -> str:
+    """将参数列表格式化为 Markdown 可读文本。"""
     if not params:
         return "无"
     return ", ".join(
@@ -286,6 +296,7 @@ def _fmt_param_list(params: List[Dict[str, Any]]) -> str:
 
 
 def _fmt_field_diff(old_fields: List[str], new_fields: List[str]) -> str:
+    """计算请求字段增删差异，并输出单行摘要。"""
     old_set = set(old_fields)
     new_set = set(new_fields)
     added = sorted(new_set - old_set)
@@ -304,6 +315,7 @@ def _generate_markdown(
     diff_result: Dict[str, Any],
     report_time: str,
 ) -> str:
+    """根据 diff 结果生成完整 Markdown 报告正文。"""
     added = diff_result["added"]
     removed = diff_result["removed"]
     changed = diff_result["changed"]
@@ -398,6 +410,7 @@ def _generate_markdown(
 
 
 def _build_added_endpoint_todo_lines(added_specs: List[EndpointSpec]) -> str:
+    """为测试副本生成“新增接口待补充”注释块。"""
     if not added_specs:
         return ""
 
@@ -412,6 +425,7 @@ def _build_added_endpoint_todo_lines(added_specs: List[EndpointSpec]) -> str:
 
 
 def _build_changed_endpoint_todo_lines(changed_items: List[Dict[str, Any]]) -> str:
+    """为测试副本生成“变更接口待处理”注释块。"""
     if not changed_items:
         return ""
 
@@ -428,6 +442,7 @@ def _build_changed_endpoint_todo_lines(changed_items: List[Dict[str, Any]]) -> s
 
 
 def _build_removed_endpoint_todo_lines(removed_specs: List[EndpointSpec]) -> str:
+    """为测试副本生成“删除接口待处理”注释块。"""
     if not removed_specs:
         return ""
 
@@ -448,6 +463,7 @@ def _annotate_testcase_calls(
     changed_method_names: Set[str],
     method_param_changes: Dict[str, Dict[str, Set[str]]],
 ) -> str:
+    """为测试调用打自动提示，并尝试移除已删除的简单命名参数。"""
     if not removed_method_names and not changed_method_names:
         return text
 
@@ -475,13 +491,13 @@ def _annotate_testcase_calls(
             if removed_params:
                 original_line = line
                 for p in sorted(removed_params):
-                    # 仅自动删除简单值（不含括号）的命名参数，复杂表达式只提示人工处理。
+                    # 仅自动删除简单命名参数（值中不含括号）；复杂表达式仅给出提示。
                     value_pattern = r"[^,\(\)\n]+"
-                    # 删除中间位置参数，如: p=1,
+                    # 删除中间参数，例如：p=1,
                     line = re.sub(rf"\b{re.escape(p)}\s*=\s*{value_pattern}\s*,\s*", "", line)
-                    # 删除末尾参数，如: , p=1
+                    # 删除末尾参数，例如：, p=1
                     line = re.sub(rf",\s*\b{re.escape(p)}\s*=\s*{value_pattern}\s*(?=\))", "", line)
-                    # 删除唯一参数，如: p=1
+                    # 删除唯一参数，例如：p=1
                     line = re.sub(rf"\b{re.escape(p)}\s*=\s*{value_pattern}\s*(?=\))", "", line)
                 if line != original_line:
                     out.append(f"{indent}# [AUTO] 已尝试移除已删除参数: {', '.join(sorted(removed_params))}")
@@ -504,9 +520,10 @@ def _clone_testcase_file(
     changed_method_names: Set[str],
     method_param_changes: Dict[str, Dict[str, Set[str]]],
 ) -> None:
+    """克隆测试文件为 `_1` 副本，并注入待办信息与调用注释。"""
     text = src.read_text(encoding="utf-8")
 
-    # 重命名测试类，避免 pytest 节点命名冲突并提升报告可读性。
+    # 重命名测试类，避免 pytest 节点重名并提升报告可读性。
     class_match = re.search(r"class\s+(\w+)\s*:", text)
     if class_match:
         old_class = class_match.group(1)
@@ -520,7 +537,7 @@ def _clone_testcase_file(
         "\"\"\"\n\n"
     )
 
-    # 保留原文件内容，并在头部追加自动生成说明。
+    # 在保留原脚本主体的前提下，追加自动生成说明与待办信息。
     text = re.sub(r"\bfrom\s+api\s+import\b", "from api_new import", text)
     todo_block = (
         _build_added_endpoint_todo_lines(added_specs)
@@ -542,6 +559,7 @@ def _clone_testcase_file(
 
 
 def _copy_api_package_to_new(api_dir: Path, api_new_dir: Path) -> List[str]:
+    """复制 `api` 到 `api_new`，并把内部 `from api import` 改写为 `from api_new import`。"""
     if api_new_dir.exists():
         shutil.rmtree(api_new_dir)
     api_new_dir.mkdir(parents=True, exist_ok=True)
@@ -559,11 +577,13 @@ def _copy_api_package_to_new(api_dir: Path, api_new_dir: Path) -> List[str]:
 
 
 def _split_endpoint_key(endpoint_key: str) -> Tuple[str, str]:
+    """拆分 `METHOD PATH` 字符串。"""
     method, path = endpoint_key.split(" ", 1)
     return method.strip().upper(), path.strip()
 
 
 def _to_snake_case(name: str) -> str:
+    """将任意名称归一化为 snake_case。"""
     if not name:
         return "auto_generated"
     name = re.sub(r"[^0-9a-zA-Z_]+", "_", name)
@@ -573,6 +593,7 @@ def _to_snake_case(name: str) -> str:
 
 
 def _to_pascal_case(name: str) -> str:
+    """将任意名称转换为 PascalCase。"""
     parts = [p for p in _to_snake_case(name).split("_") if p]
     if not parts:
         return "AutoGenerated"
@@ -580,16 +601,18 @@ def _to_pascal_case(name: str) -> str:
 
 
 def _path_prefix_for_match(path: str) -> str:
+    """从接口路径提取模块匹配前缀。"""
     segments = [seg for seg in path.split("/") if seg]
     if not segments:
         return "/"
-    # feign 接口按二级前缀聚合，其他按一级前缀聚合。
+    # feign 接口按二级路径前缀分组，其余接口按一级前缀分组。
     if segments[0] == "feign" and len(segments) >= 2:
         return f"/{segments[0]}/{segments[1]}"
     return f"/{segments[0]}"
 
 
 def _discover_api_module_map(api_dir: Path) -> List[Dict[str, str]]:
+    """扫描 API 封装文件，构建“路径前缀 -> 模块/类”映射。"""
     module_map: List[Dict[str, str]] = []
     for file_path in sorted(api_dir.glob(API_FILE_GLOB)):
         if file_path.name == "api_login.py":
@@ -612,7 +635,7 @@ def _discover_api_module_map(api_dir: Path) -> List[Dict[str, str]]:
                 }
             )
 
-    # 长前缀优先，避免 /feign 抢占 /feign/space。
+    # 长前缀优先匹配，避免 `/feign` 抢占 `/feign/space`。
     module_map.sort(key=lambda x: len(x["prefix"]), reverse=True)
     return module_map
 
@@ -623,6 +646,7 @@ def _create_new_api_module_file(
     class_name: str,
     module_desc: str,
 ) -> None:
+    """按模板创建新的 `api_new/api_xxx.py` 模块（若文件不存在）。"""
     file_path = api_new_dir / file_name
     if file_path.exists():
         return
@@ -649,12 +673,13 @@ def _default_target_module(
     module_map: List[Dict[str, str]],
     tag_name: str = "",
 ) -> Tuple[str, str]:
+    """为新增接口选择目标模块；找不到映射时自动创建新模块。"""
     for item in module_map:
         prefix = item["prefix"]
         if path.startswith(prefix):
             return item["file_name"], item["class_name"]
 
-    # 无匹配时自动建新模块，避免强依赖静态配置。
+    # 无前缀命中时自动创建新模块，减少对静态映射配置的依赖。
     prefix = _path_prefix_for_match(path).strip("/").replace("/", "_")
     seed = tag_name or prefix or "auto"
     seed_ascii = _to_snake_case(seed)
@@ -670,10 +695,12 @@ def _default_target_module(
 
 
 def _extract_existing_method_names(text: str) -> Set[str]:
+    """提取文件中已定义的方法名，避免新增方法重名。"""
     return set(re.findall(r"def\s+(\w+)\s*\(", text))
 
 
 def _discover_wrapper_endpoint_map(api_dir: Path) -> Dict[str, Dict[str, str]]:
+    """从旧 API 封装推导 `METHOD PATH -> 文件/类/方法` 映射。"""
     endpoint_map: Dict[str, Dict[str, str]] = {}
     for file_path in sorted(api_dir.glob(API_FILE_GLOB)):
         if file_path.name == "api_login.py":
@@ -725,6 +752,7 @@ def _collect_method_names_for_keys(
     endpoint_keys: List[str],
     wrapper_map: Dict[str, Dict[str, str]],
 ) -> Set[str]:
+    """将 endpoint key 列表映射为对应封装方法名集合。"""
     names: Set[str] = set()
     for key in endpoint_keys:
         info = wrapper_map.get(key)
@@ -734,7 +762,8 @@ def _collect_method_names_for_keys(
 
 
 def _candidate_param_names(param_name: str) -> Set[str]:
-    # 文档参数名可能包含中划线，测试代码通常用下划线命名。
+    """为一个文档参数生成多种代码命名候选（原样/下划线/snake_case）。"""
+    # 文档参数名可能含连字符，测试代码通常改写为下划线命名。
     normalized = param_name.strip()
     if not normalized:
         return set()
@@ -749,6 +778,7 @@ def _build_method_param_change_map(
     changed_items: List[Dict[str, Any]],
     wrapper_map: Dict[str, Dict[str, str]],
 ) -> Dict[str, Dict[str, Set[str]]]:
+    """按方法汇总参数变更：哪些参数被删除、哪些参数被新增。"""
     change_map: Dict[str, Dict[str, Set[str]]] = {}
 
     for item in changed_items:
@@ -784,6 +814,7 @@ def _build_method_param_change_map(
 
 
 def _build_added_method_code(spec: EndpointSpec, existing_method_names: Set[str]) -> str:
+    """根据 endpoint spec 生成可追加到 API 封装类中的方法代码。"""
     method_source = spec.operation_id or f"{spec.method}_{spec.path}"
     method_name = _to_snake_case(method_source)
     if method_name in existing_method_names:
@@ -825,6 +856,7 @@ def _append_added_endpoint_methods(
     added_specs: List[EndpointSpec],
     module_map: List[Dict[str, str]],
 ) -> Dict[str, Any]:
+    """将新增接口方法追加到 `api_new` 目标模块，并返回变更统计。"""
     if not added_specs:
         return {"added_methods": 0, "touched_files": []}
 
@@ -864,6 +896,7 @@ def _filter_real_added_specs(
     added_specs: List[EndpointSpec],
     address_changed: List[Dict[str, Any]],
 ) -> List[EndpointSpec]:
+    """过滤“伪新增”接口：仅因地址迁移产生的接口不再重复按新增处理。"""
     moved_operation_ids = {
         str(item.get("operationId", ""))
         for item in address_changed
@@ -880,6 +913,7 @@ def _apply_address_changes_to_api_new(
     api_new_dir: Path,
     address_changed: List[Dict[str, Any]],
 ) -> Dict[str, Any]:
+    """把地址迁移变更应用到 `api_new`：同方法下替换旧路径为新路径。"""
     replacements: List[Dict[str, str]] = []
     for item in address_changed:
         old_list = item.get("old") or []
@@ -923,6 +957,7 @@ def _apply_address_changes_to_api_new(
 
 
 def _has_differences(diff_result: Dict[str, Any]) -> bool:
+    """判断 diff 是否包含任一类型变更。"""
     return any(
         len(diff_result[k]) > 0
         for k in ("address_changed", "added", "removed", "changed")
@@ -930,6 +965,7 @@ def _has_differences(diff_result: Dict[str, Any]) -> bool:
 
 
 def _cleanup_old_reports(report_dir: Path, latest_report: Path) -> None:
+    """仅保留最新一份差异报告，清理历史 `api_doc_diff_*.md`。"""
     for old_report in report_dir.glob(REPORT_FILE_GLOB):
         if old_report.resolve() == latest_report.resolve():
             continue
@@ -937,6 +973,7 @@ def _cleanup_old_reports(report_dir: Path, latest_report: Path) -> None:
 
 
 def _extract_json_from_text(text: str) -> Dict[str, Any]:
+    """从 LLM 返回文本中提取 JSON（支持 ```json fenced block 或裸 JSON）。"""
     text = (text or "").strip()
     if not text:
         return {}
@@ -958,6 +995,7 @@ def _extract_json_from_text(text: str) -> Dict[str, Any]:
 
 
 def _build_llm_prompt_for_added_endpoints(added_specs: List[EndpointSpec], testcase_contents: Dict[str, str]) -> str:
+    """构造给 LLM 的提示词，约束输出为可解析 JSON。"""
     endpoint_lines = []
     for idx, spec in enumerate(added_specs, 1):
         endpoint_lines.append(
@@ -995,6 +1033,7 @@ def _build_llm_prompt_for_added_endpoints(added_specs: List[EndpointSpec], testc
 
 
 def _load_testcase_contents(paths: List[str]) -> Dict[str, str]:
+    """读取测试文件内容，键名优先采用 `目录/文件名` 便于提示词定位。"""
     result: Dict[str, str] = {}
     for p in paths:
         path_obj = Path(p)
@@ -1008,6 +1047,7 @@ def _load_testcase_contents(paths: List[str]) -> Dict[str, str]:
 
 
 def _normalize_llm_suggestions(raw: Dict[str, Any], generated_tests: List[str]) -> Dict[str, List[Dict[str, Any]]]:
+    """校验并规范化 LLM 建议，只保留命中目标测试文件的有效片段。"""
     by_file: Dict[str, List[Dict[str, Any]]] = {}
     valid_names = {Path(p).name: p for p in generated_tests}
 
@@ -1054,6 +1094,7 @@ def _normalize_llm_suggestions(raw: Dict[str, Any], generated_tests: List[str]) 
 
 
 def _strip_existing_llm_block(text: str) -> str:
+    """移除旧的 LLM 建议注释块，避免重复注入。"""
     pattern = re.compile(
         rf"\n?{re.escape(LLM_SUGGESTION_BEGIN)}[\s\S]*?{re.escape(LLM_SUGGESTION_END)}\n?",
         flags=re.MULTILINE,
@@ -1062,6 +1103,7 @@ def _strip_existing_llm_block(text: str) -> str:
 
 
 def _inject_llm_suggestions_into_test(path: Path, suggestions: List[Dict[str, Any]]) -> bool:
+    """将 LLM 建议以注释块写入测试文件（优先插在 `__main__` 之前）。"""
     if not suggestions:
         return False
 
@@ -1090,6 +1132,7 @@ def _inject_llm_suggestions_into_test(path: Path, suggestions: List[Dict[str, An
 
 
 def _apply_llm_suggestions_to_tests(added_specs: List[EndpointSpec], generated_tests: List[str]) -> Dict[str, Any]:
+    """调用 LLM 生成建议并写回测试副本，返回执行与落地结果。"""
     result = {
         "enabled": True,
         "used": False,
@@ -1136,6 +1179,18 @@ def generate_report_and_tests(
     api_new_dir: Path,
     use_llm: bool = False,
 ) -> Dict[str, Any]:
+    """
+    对比新旧 API 文档并生成产物。
+
+    处理流程：
+    1) 解析文档并输出差异报告；
+    2) 若存在差异，生成 `api_new`、迁移地址、追加新增接口方法；
+    3) 生成测试 `_1` 副本并标注待办；
+    4) 可选执行 LLM 建议注入。
+
+    返回值包含报告路径、生成文件列表、迁移统计、LLM 执行结果与差异计数。
+    """
+    # Phase 1: 解析文档并计算差异。
     old_json = _load_json(old_doc)
     new_json = _load_json(new_doc)
 
@@ -1162,6 +1217,7 @@ def generate_report_and_tests(
     api_added_methods = {"added_methods": 0, "touched_files": []}
     llm_suggestions = {"enabled": use_llm, "used": False, "model": "", "applied_files": [], "error": ""}
 
+    # Phase 2: 仅在有差异时生成 api_new 与测试副本。
     if has_diff:
         generated_api_files = _copy_api_package_to_new(api_dir=api_dir, api_new_dir=api_new_dir)
         dynamic_module_map = _discover_api_module_map(api_new_dir)
@@ -1191,6 +1247,7 @@ def generate_report_and_tests(
         )
         generated_api_files = [str(p) for p in sorted(api_new_dir.glob("*.py"))]
 
+        # Phase 3: 生成 testcase `_1` 副本并注入自动注释。
         for src in sorted(testcase_dir.glob("test_*.py")):
             if src.stem.endswith("_1"):
                 continue
@@ -1207,6 +1264,7 @@ def generate_report_and_tests(
             )
             generated_tests.append(str(dst))
 
+        # Phase 4: 可选执行 LLM 建议注入（不影响主流程成功）。
         if use_llm:
             llm_suggestions = _apply_llm_suggestions_to_tests(
                 added_specs=real_added_specs,
@@ -1232,7 +1290,8 @@ def generate_report_and_tests(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="对比两份 API 文档并按需生成测试脚本副本")
+    """命令行入口：解析参数并打印 JSON 结果。"""
+    parser = argparse.ArgumentParser(description="对比两份 API 文档，并按需生成 api_new 接口封装与测试脚本副本")
     parser.add_argument("--old-doc", default=str(DEFAULT_OLD_DOC), help="旧版 API 文档路径")
     parser.add_argument("--new-doc", default=str(DEFAULT_NEW_DOC), help="新版 API 文档路径")
     parser.add_argument("--report-dir", default=str(DEFAULT_REPORT_DIR), help="报告输出目录")
