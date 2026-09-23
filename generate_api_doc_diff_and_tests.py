@@ -1148,7 +1148,7 @@ def _apply_llm_suggestions_to_tests(added_specs: List[EndpointSpec], generated_t
     cfg = _load_ai_config()
     result["model"] = str(cfg.get("model", ""))
     if not cfg.get("token"):
-        result["error"] = "未配置GITHUB_TOKEN，跳过LLM建议"
+        result["error"] = "未配置LLM API Key，跳过LLM建议"
         return result
 
     testcase_contents = _load_testcase_contents(generated_tests)

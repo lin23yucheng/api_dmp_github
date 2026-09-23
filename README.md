@@ -59,5 +59,5 @@ python -u .\generate_api_doc_diff_and_tests.py \
 
 - `generate_api_doc_diff_and_tests.py` 默认会调用大模型（前提是有新增接口且配置了有效 token）。
 - 传入 `--no-llm` 可关闭大模型建议。
-- 模型与地址读取自 `config/ai_config.ini`，密钥优先从 `config/secret.env` 或环境变量 `GITHUB_TOKEN` 读取。
+- 模型与地址读取自 `config/ai_config.ini`，密钥优先从 `config/secret.env` 或环境变量读取（GitHub: `GITHUB_TOKEN`；DeepSeek: `DEEPSEEK_API_KEY` / `APIKEYS_DS`）。
 

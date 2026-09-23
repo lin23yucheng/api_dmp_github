@@ -372,7 +372,7 @@ def append_ai_analysis(markdown: str) -> str:
     lines.append(f"- 模型: `{model_name}`")
 
     if not ai_cfg.get("token"):
-        lines.append("- 状态: 未配置 `GITHUB_TOKEN`，已跳过 AI 分析")
+        lines.append("- 状态: 未配置 `LLM API Key`，已跳过 AI 分析")
         return markdown.rstrip() + "\n" + "\n".join(lines) + "\n"
 
     try:

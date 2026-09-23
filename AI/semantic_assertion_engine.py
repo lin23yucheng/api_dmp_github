@@ -355,7 +355,7 @@ def _build_llm_second_review(high_risk_cases, report_stats):
         )
 
     if not ai_cfg.get("token"):
-        return f"LLM二次复核已启用，但未配置 GITHUB_TOKEN，已跳过。（已配置模型：{model_name}）"
+        return f"LLM二次复核已启用，但未配置 LLM API Key，已跳过。（已配置模型：{model_name}）"
 
     max_cases = max(1, review_cfg["max_cases"])
     sample_cases = high_risk_cases[:max_cases]
