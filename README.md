@@ -21,7 +21,13 @@
 
 ## 快速运行
 
+首次克隆后，复制 `config/` 下对应的 `.example` 文件，去掉 `.example` 后缀，并在本地填写配置。真实配置和密钥不会提交到 Git。
+
 ```powershell
+Copy-Item .\config\env_config.example.ini .\config\env_config.ini
+Copy-Item .\config\ai_config.example.ini .\config\ai_config.ini
+Copy-Item .\config\semantic_assertion.example.ini .\config\semantic_assertion.ini
+Copy-Item .\config\api_excluded_interfaces.example.json .\config\api_excluded_interfaces.json
 python -u .\generate_api_doc_diff_and_tests.py
 ```
 

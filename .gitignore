@@ -21,6 +21,13 @@ Log/
 # Local secrets
 config/secret.env
 
+# Local configuration may contain private hosts, credentials, or project data
+config/env_config.ini
+config/ai_config.ini
+config/semantic_assertion.ini
+config/api_excluded_interfaces.json
+testdata/Token.txt
+
 # Test and temporary files
 .pytest_cache/
 
